@@ -2,18 +2,18 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Models\Actualite;
+use App\Models\Carrousel;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
-class ActualiteController extends Controller
+class CarrouselController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        return response()->json(Actualite::all(), 200);
+        return response()->json(Carrousel::all(), 200);
     }
 
     /**
@@ -22,15 +22,16 @@ class ActualiteController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'url_image' => 'required|string',
             'description' => 'required|string',
-            'jour' => 'required|date',
-            'heure' => 'required|date_format:H:i',
-            'lieu' => 'required|string',
+            'url_image' => 'required|string',
+            'lien' => 'nullable|string',
+            'num_ordre' => 'required|integer',
+            'isActif' => 'boolean',
         ]);
 
-        $actualite = Actualite::create($validated);
-        return response()->json($actualite, 201);
+        $carrousel = Carrousel::create($validated);
+
+        return response()->json($carrousel, 201);
     }
 
     /**
@@ -38,8 +39,8 @@ class ActualiteController extends Controller
      */
     public function show(string $id)
     {
-        $actualite = Actualite::findOrFail($id);
-        return response()->json($actualite, 200);
+        $carrousel = Carrousel::findOrFail($id);
+        return response()->json($carrousel, 200);
     }
 
     /**
@@ -47,18 +48,18 @@ class ActualiteController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        $actualite = Actualite::findOrFail($id);
+        $carrousel = Carrousel::findOrFail($id);
         $validated = $request->validate([
-            'url_image' => 'sometimes|string',
             'description' => 'sometimes|string',
-            'jour' => 'sometimes|date',
-            'heure' => 'sometimes|date_format:H:i',
-            'lieu' => 'sometimes|string',
+            'url_image' => 'sometimes|string',
+            'lien' => 'nullable|string',
+            'num_ordre' => 'sometimes|integer',
+            'isActif' => 'boolean',
         ]);
 
-        $actualite->update($validated);
+        $carrousel->update($validated);
 
-        return response()->json($actualite, 200);
+        return response()->json($carrousel, 200);
     }
 
     /**
@@ -66,8 +67,8 @@ class ActualiteController extends Controller
      */
     public function destroy(string $id)
     {
-        $actualite = Actualite::findOrFail($id);
-        $actualite->delete();
+        $carrousel = Carrousel::findOrFail($id);
+        $carrousel->delete();
 
         return response()->json(null, 204);
     }
